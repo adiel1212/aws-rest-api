@@ -89,7 +89,7 @@ def validar_alumno(data):
 
 def validar_profesor(data):
     errores = []
-    if not data.get("numeroEmpleado") or not isinstance(data["numeroEmpleado"], str) or data["numeroEmpleado"].strip() == "":
+    if not data.get("numeroEmpleado") or not isinstance(data["numeroEmpleado"], (str, int)) or str(data["numeroEmpleado"]).strip() == "":
         errores.append("numeroEmpleado es requerido y debe ser texto")
     if not data.get("nombres") or not isinstance(data["nombres"], str) or data["nombres"].strip() == "":
         errores.append("nombres es requerido y debe ser texto")
@@ -288,7 +288,7 @@ def create_profesor():
         errores = validar_profesor(data)
         if errores:
             return jsonify({"errores": errores}), 400
-        p = Profesor(numeroEmpleado=data["numeroEmpleado"].strip(), nombres=data["nombres"].strip(),
+        p = Profesor(numeroEmpleado=str(data["numeroEmpleado"]).strip(), nombres=data["nombres"].strip(),
                      apellidos=data["apellidos"].strip(), horasClase=int(data["horasClase"]))
         db.session.add(p)
         db.session.commit()
@@ -309,7 +309,7 @@ def update_profesor(id):
         errores = validar_profesor(data)
         if errores:
             return jsonify({"errores": errores}), 400
-        p.numeroEmpleado = data["numeroEmpleado"].strip()
+        p.numeroEmpleado = str(data["numeroEmpleado"]).strip()
         p.nombres = data["nombres"].strip()
         p.apellidos = data["apellidos"].strip()
         p.horasClase = int(data["horasClase"])
